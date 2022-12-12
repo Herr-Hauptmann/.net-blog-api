@@ -1,10 +1,15 @@
 global using rubicon_blog.Models;
+using Microsoft.EntityFrameworkCore;
+using rubicon_blog.Data;
 using rubicon_blog.Services.PostService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddDbContext<DataContext>(options=>{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
