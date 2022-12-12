@@ -13,6 +13,7 @@ namespace rubicon_blog
         {
             CreateMap<Post, GetPostDto>();
             CreateMap<AddPostDto, Post>();
+            CreateMap<UpdatePostDto, Post>();
         }
     }
 }

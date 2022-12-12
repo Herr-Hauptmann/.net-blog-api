@@ -32,5 +32,21 @@ namespace rubicon_blog.Controllers
         public async Task<ActionResult<ServiceResponse<List<GetPostDto>>>> AddPost(AddPostDto newPost){
             return Ok(await _postService.AddPost(newPost));
         }
+        [HttpPut("{slug}")]
+        public async Task<ActionResult<ServiceResponse<GetPostDto>>> UpdatePost (string slug, UpdatePostDto updatedPost){
+            var response = await _postService.UpdatePost(slug, updatedPost);
+            if (response.Data == null){
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
+        [HttpDelete("{slug}")]
+        public async Task<ActionResult<ServiceResponse<List<GetPostDto>>>> Delete (string slug){
+            var response = await _postService.DeletePost(slug);
+            if (response.Data == null){
+                return NotFound(response);
+            }
+            return Ok(response);
+        }
     }
 }

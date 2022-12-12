@@ -49,9 +49,36 @@ namespace rubicon_blog.Services.PostService
             return serviceResponse;
         }
 
-        public Task<ServiceResponse<GetPostDto>> UpdatePost(UpdatePostDto updatedPost)
+        public async Task<ServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost)
         {
-            throw new NotImplementedException();
+            var serviceResponse = new ServiceResponse<GetPostDto>();
+            try
+            { 
+                Post post = posts.FirstOrDefault(post=>post.Slug.Equals(slug));
+                _mapper.Map(updatedPost, post);
+                serviceResponse.Data = _mapper.Map<GetPostDto>(post);
+            }
+            catch(Exception)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "This post doesn't exist";
+            }
+            return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetPostDto>>> DeletePost(string slug)
+        {
+            var serviceResponse = new ServiceResponse<List<GetPostDto>>();
+            try{
+                Post post = posts.FirstOrDefault(post=>post.Slug.Equals(slug));
+                posts.Remove(post);
+                serviceResponse.Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList();
+            }catch(Exception)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = "This post doesn't exist";
+            }
+            return serviceResponse;
         }
     }
 }
