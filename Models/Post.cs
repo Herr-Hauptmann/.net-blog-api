@@ -16,6 +16,6 @@ namespace rubicon_blog.Models
         public string Body { get; set; } = "";
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<Comment>? Comments { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

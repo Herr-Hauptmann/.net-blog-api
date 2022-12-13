@@ -63,5 +63,9 @@ namespace rubicon_blog.Controllers
         public async Task<ActionResult<ServiceResponse<List<GetCommentDto>>>> GetAllComments(string slug){
             return Ok(await _commentService.GetAllComments(slug));
         }
+        [HttpDelete("{slug}/comments/{id}")]
+        public async Task<ActionResult<ServiceResponse<string>>> DeleteComment(string slug, int id){
+            return Ok(await _commentService.DeleteComment(slug, id));
+        }
     }
 }
