@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Slugify;
 using rubicon_blog.Dtos.Post;
+using Microsoft.EntityFrameworkCore;
 
 namespace rubicon_blog.Services.PostService
 {
@@ -14,37 +15,35 @@ namespace rubicon_blog.Services.PostService
     {
         private IMapper _mapper;
         private SlugHelper _slugHelper;
-        private static List<Post> posts = new List<Post>();
-        public PostService(IMapper mapper)
+        private DataContext _context;
+        public PostService(IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _slugHelper = new SlugHelper();
+            _context = context;
         }
 
-        public async Task<ServiceResponse<List<GetPostDto>>> AddPost(AddPostDto newPost)
+        public async Task<ServiceResponse<GetPostDto>> AddPost(AddPostDto newPost)
         {
-            var serviceResponse = new ServiceResponse<List<GetPostDto>>();
-            var post = _mapper.Map<Post>(newPost);
-            if (posts.FirstOrDefault() != null)
-            {
-                post.Id = posts.Max(post => post.Id) +1;
-            }
-            else post.Id = 0;
+            var serviceResponse = new ServiceResponse<GetPostDto>();
+            Post post = _mapper.Map<Post>(newPost);
             post.Slug = _slugHelper.GenerateSlug(newPost.Title);
-            posts.Add(post);
-            serviceResponse.Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList();
+            await _context.Posts.AddAsync(post);
+            _context.SaveChanges();
+            serviceResponse.Data = _mapper.Map<GetPostDto>(post);
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetPostDto>>> GetAllPosts()
         {
+            List<Post> posts = await _context.Posts.ToListAsync();
             return new ServiceResponse<List<GetPostDto>>{Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList()};
         }
 
-        public async Task<ServiceResponse<GetPostDto>> GetPostById(string slug)
+        public async Task<ServiceResponse<GetPostDto>> GetPostBySlug(string slug)
         {
             var serviceResponse = new ServiceResponse<GetPostDto>();
-            var post = posts.FirstOrDefault( post=> post.Slug.Equals(slug));
+            Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
             serviceResponse.Data = _mapper.Map<GetPostDto>(post);
             return serviceResponse;
         }
@@ -54,8 +53,9 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new ServiceResponse<GetPostDto>();
             try
             { 
-                Post post = posts.FirstOrDefault(post=>post.Slug.Equals(slug));
+                Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
                 _mapper.Map(updatedPost, post);
+                _context.SaveChanges();
                 serviceResponse.Data = _mapper.Map<GetPostDto>(post);
             }
             catch(Exception)
@@ -70,9 +70,10 @@ namespace rubicon_blog.Services.PostService
         {
             var serviceResponse = new ServiceResponse<List<GetPostDto>>();
             try{
-                Post post = posts.FirstOrDefault(post=>post.Slug.Equals(slug));
-                posts.Remove(post);
-                serviceResponse.Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList();
+                Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
+                _context.Posts.Remove(post);
+                _context.SaveChanges();
+                serviceResponse.Message = "Post deleted successfully";
             }catch(Exception)
             {
                 serviceResponse.Success = false;

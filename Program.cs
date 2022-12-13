@@ -1,6 +1,7 @@
 global using rubicon_blog.Models;
+global using rubicon_blog.Data;
 using Microsoft.EntityFrameworkCore;
-using rubicon_blog.Data;
+using rubicon_blog.Services.CommentService;
 using rubicon_blog.Services.PostService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();
