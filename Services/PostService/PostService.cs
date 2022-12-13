@@ -8,9 +8,7 @@ using rubicon_blog.Dtos.Post;
 using Microsoft.EntityFrameworkCore;
 
 namespace rubicon_blog.Services.PostService
-{
-
-    
+{    
     public class PostService : IPostService
     {
         private IMapper _mapper;
@@ -58,6 +56,9 @@ namespace rubicon_blog.Services.PostService
                 Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
                 post.UpdatedAt=DateTime.Now;
                 post.Slug = _slugHelper.GenerateSlug(updatedPost.Title);
+                if(updatedPost.Body == null) updatedPost.Body = post.Body; 
+                if(updatedPost.Description == null) updatedPost.Description = post.Description; 
+                if(updatedPost.Title == null) updatedPost.Title = post.Title; 
                 _mapper.Map(updatedPost, post);
                 _context.SaveChanges();
                 serviceResponse.Data = _mapper.Map<GetPostDto>(post);
