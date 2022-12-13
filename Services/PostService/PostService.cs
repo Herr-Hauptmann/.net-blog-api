@@ -28,6 +28,8 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new ServiceResponse<GetPostDto>();
             Post post = _mapper.Map<Post>(newPost);
             post.Slug = _slugHelper.GenerateSlug(newPost.Title);
+            post.CreatedAt = DateTime.Now;
+            post.UpdatedAt = DateTime.Now;
             await _context.Posts.AddAsync(post);
             _context.SaveChanges();
             serviceResponse.Data = _mapper.Map<GetPostDto>(post);
@@ -54,6 +56,8 @@ namespace rubicon_blog.Services.PostService
             try
             { 
                 Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
+                post.UpdatedAt=DateTime.Now;
+                post.Slug = _slugHelper.GenerateSlug(updatedPost.Title);
                 _mapper.Map(updatedPost, post);
                 _context.SaveChanges();
                 serviceResponse.Data = _mapper.Map<GetPostDto>(post);
