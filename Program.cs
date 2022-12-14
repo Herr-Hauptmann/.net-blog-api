@@ -3,6 +3,7 @@ global using rubicon_blog.Data;
 using Microsoft.EntityFrameworkCore;
 using rubicon_blog.Services.CommentService;
 using rubicon_blog.Services.PostService;
+using rubicon_blog.Services.TagService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 var app = builder.Build();

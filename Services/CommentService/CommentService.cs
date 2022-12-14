@@ -45,7 +45,6 @@ namespace rubicon_blog.Services.CommentService
                 int postId = (await _context.Posts.SingleAsync(post => post.Slug.Equals(slug))).Id;
                 List<Comment> comments = await _context.Comments.ToListAsync();
                 return new ServiceResponse<List<GetCommentDto>>{Data = comments.Select(comment => _mapper.Map<GetCommentDto>(comment)).ToList()};
-
             }catch (Exception)
             {
                 return new ServiceResponse<List<GetCommentDto>>{Success = false, Message = "Greska!"};

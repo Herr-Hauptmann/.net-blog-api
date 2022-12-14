@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper.Configuration.Annotations;
 
 namespace rubicon_blog.Dtos.Post
 {
@@ -10,5 +11,7 @@ namespace rubicon_blog.Dtos.Post
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
         public string Body { get; set; } = "";
+        [Ignore]
+        public List<String>? TagList {get; set;}
     }
 }

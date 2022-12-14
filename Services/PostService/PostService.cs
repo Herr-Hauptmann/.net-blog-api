@@ -6,6 +6,7 @@ using AutoMapper;
 using Slugify;
 using rubicon_blog.Dtos.Post;
 using Microsoft.EntityFrameworkCore;
+using rubicon_blog.Services.TagService;
 
 namespace rubicon_blog.Services.PostService
 {    
@@ -14,30 +15,55 @@ namespace rubicon_blog.Services.PostService
         private IMapper _mapper;
         private SlugHelper _slugHelper;
         private DataContext _context;
-        public PostService(IMapper mapper, DataContext context)
+        private ITagService _tagService;
+
+        public PostService(ITagService tagService, IMapper mapper, DataContext context)
         {
             _mapper = mapper;
             _slugHelper = new SlugHelper();
             _context = context;
+            _tagService = tagService;
         }
 
         public async Task<ServiceResponse<GetPostDto>> AddPost(AddPostDto newPost)
         {
             var serviceResponse = new ServiceResponse<GetPostDto>();
-            Post post = _mapper.Map<Post>(newPost);
-            post.Slug = _slugHelper.GenerateSlug(newPost.Title);
-            post.CreatedAt = DateTime.Now;
-            post.UpdatedAt = DateTime.Now;
-            await _context.Posts.AddAsync(post);
+            
+            //Create post
+            Post post = new()
+            {
+                Title = newPost.Title,
+                Body = newPost.Body,
+                Description = newPost.Description,
+                Slug = _slugHelper.GenerateSlug(newPost.Title),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            var addedPost = await _context.Posts.AddAsync(post);
             _context.SaveChanges();
+            
+            //Create tags and add them to post
+            List<int> tagIds = _tagService.AddTags(newPost.TagList);
+            _tagService.AddTagsToPost(addedPost.Entity.Id, tagIds);
+
             serviceResponse.Data = _mapper.Map<GetPostDto>(post);
             return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<GetPostDto>>> GetAllPosts()
         {
-            List<Post> posts = await _context.Posts.ToListAsync();
-            return new ServiceResponse<List<GetPostDto>>{Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList()};
+            List<Post> posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
+            var res = new ServiceResponse<List<GetPostDto>>{Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList()};
+            int i = 0;
+            //Jako ruzna implementacija, mora postojati bolji nacin.
+            foreach(Post p in posts)
+            {
+                foreach (Tag t in p.Tags){
+                    res.Data[i].tagList.Add(t.Name);
+                }
+                i++;
+            }
+            return res;
         }
 
         public async Task<ServiceResponse<GetPostDto>> GetPostBySlug(string slug)

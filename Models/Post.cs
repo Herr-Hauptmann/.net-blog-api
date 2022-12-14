@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.Configuration.Annotations;
 
 namespace rubicon_blog.Models
 {
@@ -16,6 +17,8 @@ namespace rubicon_blog.Models
         public string Body { get; set; } = "";
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public List<Comment> Comments { get; set; }
+        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
+        [Ignore]
+        public virtual List<Tag> Tags { get; set; } = new List<Tag>();
     }
 }
