@@ -8,8 +8,8 @@ namespace rubicon_blog.Services.TagService
 {
     public class TagService : ITagService
     {
-        private IMapper _mapper;
-        private DataContext _context;
+        private readonly IMapper _mapper;
+        private readonly DataContext _context;
 
         public TagService(IMapper mapper, DataContext context)
         {
@@ -18,7 +18,7 @@ namespace rubicon_blog.Services.TagService
         }
 
         public List<int> AddTags(List<string>? tagNames){
-            List<int> tagIds = new List<int>();
+            List<int> tagIds = new();
             if (tagNames ==null)
                 return tagIds;
             
