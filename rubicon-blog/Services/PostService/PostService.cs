@@ -65,8 +65,8 @@ namespace rubicon_blog.Services.PostService
                 if (tagName != null && tagName.Length != 0)
                     posts = _tagService.GetPostsByTag(tagName);
                 else
-                    posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
-                    
+                    posts = await _context.Posts.Include(t => t.Tags).OrderByDescending(p=>p.Id).ToListAsync();
+
                 //Fill the response
                 serviceResponse.BlogPosts = new List<GetPostDto>();
                 foreach (var post in posts)
@@ -84,11 +84,23 @@ namespace rubicon_blog.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<GetPostDto>> GetPostBySlug(string slug)
+        public async Task<SinglePostServiceResponse<GetPostDto>> GetPostBySlug(string slug)
         {
-            var serviceResponse = new ServiceResponse<GetPostDto>();
-            Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
-            serviceResponse.Data = _mapper.Map<GetPostDto>(post);
+            var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
+            try
+            {
+                Post? post = _context.Posts.Include(t => t.Tags).SingleOrDefault(post => post.Slug.Equals(slug));
+                if (post == null)
+                    throw new Exception("Not found");
+                serviceResponse.BlogPost = Helpers.Mapper.MapPostToGetDto(post);
+                serviceResponse.Message = Resource.PostsFetched;
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = Resource.PostNotFound;
+                serviceResponse.Exception = ex;
+            }
             return serviceResponse;
         }
 

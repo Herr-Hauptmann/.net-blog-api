@@ -9,7 +9,7 @@ namespace rubicon_blog.Services.PostService
     public interface IPostService
     {
         Task<MultiplePostServiceResponse<List<GetPostDto>>> GetAllPosts(string tagName);
-        Task<ServiceResponse<GetPostDto>> GetPostBySlug(string slug);
+        Task<SinglePostServiceResponse<GetPostDto>> GetPostBySlug(string slug);
         Task<SinglePostServiceResponse<GetPostDto>> AddPost(AddPostDto newPost);
         Task<ServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost);
         Task<ServiceResponse<List <GetPostDto>>> DeletePost(string slug);

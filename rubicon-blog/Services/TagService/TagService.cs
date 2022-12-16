@@ -60,19 +60,17 @@ namespace rubicon_blog.Services.TagService
             List<Post> posts = new List<Post>();
             try
             {
-                var tag = _context.Tags.Where(tag => tag.Name.Equals(tagName)).Include(p => p.Posts).ToList();
-                if (tag != null && tag[0] != null)
+                //very crude but it only returns one tag
+                var tag = _context.Tags.Include(p => p.Posts).SingleOrDefault(tag => tag.Name.Equals(tagName));
+                if (tag != null)
                 {
-                    foreach (Post p in tag[0].Posts)
+                    foreach (Post p in tag.Posts)
                     {
-                        var post = _context.Posts.Where(post => post.Id == p.Id).Include(t => t.Tags).ToList();
-                        foreach(var t in post)
-                        {
-                            posts.Add(t);
-                        }
-
+                        var post = _context.Posts.Include(t => t.Tags).Single(post => post.Id == p.Id);
+                        posts.Add(post);
                     }
                 }
+                posts = posts.OrderByDescending(p => p.Id).ToList();
                 return posts;
             }catch(Exception )
             {

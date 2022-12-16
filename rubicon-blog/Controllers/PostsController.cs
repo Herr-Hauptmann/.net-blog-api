@@ -31,7 +31,7 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpGet("{slug}")]
-        public async Task<ActionResult<ServiceResponse<GetPostDto>>> GetSingle(string slug)
+        public async Task<ActionResult<SinglePostServiceResponse<GetPostDto>>> GetSingle(string slug)
         {
             return Ok(await _postService.GetPostBySlug(slug));
         }

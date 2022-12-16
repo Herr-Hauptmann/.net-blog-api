@@ -88,6 +88,15 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required post doesn&apos;t exist.
+        /// </summary>
+        public static string PostNotFound {
+            get {
+                return ResourceManager.GetString("PostNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Posts have been sucessfully fetched.
         /// </summary>
         public static string PostsFetched {
