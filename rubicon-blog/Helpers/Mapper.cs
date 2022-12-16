@@ -4,7 +4,7 @@ namespace rubicon_blog.Helpers
 {
     public static class Mapper
     {
-        public static GetPostDto MapPostToDTO(Post post)
+        public static GetPostDto MapPostToGetDto(Post post)
         {
             return new GetPostDto()
             {
@@ -18,7 +18,7 @@ namespace rubicon_blog.Helpers
             };
         }
 
-        public static Post MapDTOToPost(AddPostDto newPost)
+        public static Post MapAddDtoToPost(AddPostDto newPost)
         {
             return new Post()
             {

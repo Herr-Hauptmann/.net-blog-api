@@ -24,7 +24,7 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<GetPostDto>>>> Get()
+        public async Task<ActionResult<MultiplePostServiceResponse<List<GetPostDto>>>> Get()
         {
             return Ok(await _postService.GetAllPosts());
         }

@@ -127,4 +127,10 @@
   <data name="PostNotCreated" xml:space="preserve">
     <value>There was an error while creating the post</value>
   </data>
+  <data name="PostsFetched" xml:space="preserve">
+    <value>Posts have been sucessfully fetched</value>
+  </data>
+  <data name="PostsNotFetched" xml:space="preserve">
+    <value>Posts couldn't be fetched</value>
+  </data>
 </root>

@@ -32,9 +32,8 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
             try
             {
-
                 //Create post
-                Post post = Helpers.Mapper.MapDTOToPost(newPost);
+                Post post = Helpers.Mapper.MapAddDtoToPost(newPost);
                 post.Slug = _slugHelper.GenerateSlug(newPost.Title);
                 var addedPost = await _context.Posts.AddAsync(post);
                 _context.SaveChanges();
@@ -44,7 +43,7 @@ namespace rubicon_blog.Services.PostService
                 _tagService.AddTagsToPost(addedPost.Entity.Id, tagIds);
 
                 //Return the post
-                serviceResponse.BlogPost = Helpers.Mapper.MapPostToDTO(post);
+                serviceResponse.BlogPost = Helpers.Mapper.MapPostToGetDto(post);
                 serviceResponse.Message = Resource.PostCreated;
                 return serviceResponse;
             }
@@ -57,20 +56,28 @@ namespace rubicon_blog.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<List<GetPostDto>>> GetAllPosts()
+        public async Task<MultiplePostServiceResponse<List<GetPostDto>>> GetAllPosts()
         {
-            List<Post> posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
-            var res = new ServiceResponse<List<GetPostDto>>{Data = posts.Select(post => _mapper.Map<GetPostDto>(post)).ToList()};
-            int i = 0;
-            //Jako ruzna implementacija, mora postojati bolji nacin.
-            foreach(Post p in posts)
+            var serviceResponse = new MultiplePostServiceResponse<List<GetPostDto>>();
+            try
             {
-                foreach (Tag t in p.Tags){
-                    res.Data[i].tagList.Add(t.Name);
-                }
-                i++;
+                List<Post> posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
+
+                //Fill the response
+                serviceResponse.BlogPosts = new List<GetPostDto>();
+                foreach (var post in posts)
+                    serviceResponse.BlogPosts.Add(Helpers.Mapper.MapPostToGetDto(post));
+                serviceResponse.PostsCount = serviceResponse.BlogPosts.Count();
+                serviceResponse.Message = Resource.PostsFetched;
+                return serviceResponse;
             }
-            return res;
+            catch(Exception ex)
+            {
+                serviceResponse.Exception = ex;
+                serviceResponse.Success = false;
+                serviceResponse.Message = Resource.PostsNotFetched;
+                return serviceResponse;
+            }
         }
 
         public async Task<ServiceResponse<GetPostDto>> GetPostBySlug(string slug)

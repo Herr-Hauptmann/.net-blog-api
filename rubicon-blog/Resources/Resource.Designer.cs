@@ -86,5 +86,23 @@ namespace rubicon_blog.Resources {
                 return ResourceManager.GetString("PostNotCreated", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Posts have been sucessfully fetched.
+        /// </summary>
+        public static string PostsFetched {
+            get {
+                return ResourceManager.GetString("PostsFetched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Posts couldn&apos;t be fetched.
+        /// </summary>
+        public static string PostsNotFetched {
+            get {
+                return ResourceManager.GetString("PostsNotFetched", resourceCulture);
+            }
+        }
     }
 }
