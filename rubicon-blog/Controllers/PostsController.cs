@@ -34,11 +34,8 @@ namespace rubicon_blog.Controllers
         public async Task<ActionResult<SinglePostServiceResponse<GetPostDto>>> GetSingle(string slug)
         {
             var response = await _postService.GetPostBySlug(slug);
-            if (!response.Success)
-            {
-                return NotFound(response);
-            }
-            return Ok(response);
+            return (response.Success) ? Ok(response) : NotFound(response);
+
         }
 
         [HttpPost]
@@ -67,8 +64,11 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpPost("{slug}/comments")]
-        public async Task<ActionResult<ServiceResponse<GetCommentDto>>> AddComment(string slug, AddCommentDto newComment){
-            return Ok(await _commentService.AddComment(slug, newComment));
+        public async Task<ActionResult<SingleCommentServiceResponse<GetCommentDto>>> AddComment(string slug, CreateCommentRequest newComment){
+            if (newComment == null || newComment.Comment == null)
+                return BadRequest();
+            var res = await _commentService.AddComment(slug, newComment.Comment);
+            return (res.Success) ? Ok(res) : BadRequest(res);
         }
 
         [HttpGet("{slug}/comments")]

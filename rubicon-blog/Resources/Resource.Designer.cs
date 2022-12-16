@@ -61,6 +61,24 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The comment was successfully created.
+        /// </summary>
+        public static string CommentCreated {
+            get {
+                return ResourceManager.GetString("CommentCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was a problem creating your comment.
+        /// </summary>
+        public static string CommentNotCreated {
+            get {
+                return ResourceManager.GetString("CommentNotCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Post created sucessfully.
         /// </summary>
         public static string PostCreated {

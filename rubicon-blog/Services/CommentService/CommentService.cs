@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using rubicon_blog.Dtos.Comment;
+using rubicon_blog.Resources;
 
 namespace rubicon_blog.Services.CommentService
 {
@@ -18,17 +19,27 @@ namespace rubicon_blog.Services.CommentService
             _mapper = mapper;
             _context = context;
         }
-        public async Task<ServiceResponse<GetCommentDto>> AddComment(string slug, AddCommentDto newComment)
+        public async Task<SingleCommentServiceResponse<GetCommentDto>> AddComment(string slug, AddCommentDto newComment)
         {
-            var serviceResponse = new ServiceResponse<GetCommentDto>();
-            var comment = _mapper.Map<Comment>(newComment);
-            comment.CreatedAt = DateTime.Now;
-            comment.UpdatedAt = DateTime.Now;
-            Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
-            comment.Post = post;
-            await _context.Comments.AddAsync(comment);
-            _context.SaveChanges();
-            serviceResponse.Data = _mapper.Map<GetCommentDto>(comment);
+            var serviceResponse = new SingleCommentServiceResponse<GetCommentDto>();
+            try
+            {
+                var comment = _mapper.Map<Comment>(newComment);
+                comment.CreatedAt = DateTime.Now;
+                comment.UpdatedAt = DateTime.Now;
+                Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
+                comment.Post = post;
+                await _context.Comments.AddAsync(comment);
+                _context.SaveChanges();
+                serviceResponse.Comment = _mapper.Map<GetCommentDto>(comment);
+                serviceResponse.Message = Resource.CommentCreated;
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Exception = ex;
+                serviceResponse.Message = Resource.CommentNotCreated;
+            }
             return serviceResponse;
         }
 
