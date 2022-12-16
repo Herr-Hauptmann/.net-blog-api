@@ -68,5 +68,23 @@ namespace rubicon_blog.Resources {
                 return ResourceManager.GetString("NoPost", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post created sucessfully.
+        /// </summary>
+        public static string PostCreated {
+            get {
+                return ResourceManager.GetString("PostCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error while creating the post.
+        /// </summary>
+        public static string PostNotCreated {
+            get {
+                return ResourceManager.GetString("PostNotCreated", resourceCulture);
+            }
+        }
     }
 }

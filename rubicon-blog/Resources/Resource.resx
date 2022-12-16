@@ -121,4 +121,10 @@
     <value>This post doesn't exist</value>
     <comment>When post is not found in db</comment>
   </data>
+  <data name="PostCreated" xml:space="preserve">
+    <value>Post created sucessfully</value>
+  </data>
+  <data name="PostNotCreated" xml:space="preserve">
+    <value>There was an error while creating the post</value>
+  </data>
 </root>

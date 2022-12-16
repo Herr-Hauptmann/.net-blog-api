@@ -27,29 +27,34 @@ namespace rubicon_blog.Services.PostService
             _tagService = tagService;
         }
 
-        public async Task<ServiceResponse<GetPostDto>> AddPost(AddPostDto newPost)
+        public async Task<SinglePostServiceResponse<GetPostDto>> AddPost(AddPostDto newPost)
         {
-            var serviceResponse = new ServiceResponse<GetPostDto>();
-            
-            //Create post
-            Post post = new()
+            var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
+            try
             {
-                Title = newPost.Title,
-                Body = newPost.Body,
-                Description = newPost.Description,
-                Slug = _slugHelper.GenerateSlug(newPost.Title),
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
-            };
-            var addedPost = await _context.Posts.AddAsync(post);
-            _context.SaveChanges();
-            
-            //Create tags and add them to post
-            List<int> tagIds = _tagService.AddTags(newPost.TagList);
-            _tagService.AddTagsToPost(addedPost.Entity.Id, tagIds);
 
-            serviceResponse.Data = _mapper.Map<GetPostDto>(post);
-            return serviceResponse;
+                //Create post
+                Post post = Helpers.Mapper.MapDTOToPost(newPost);
+                post.Slug = _slugHelper.GenerateSlug(newPost.Title);
+                var addedPost = await _context.Posts.AddAsync(post);
+                _context.SaveChanges();
+
+                //Create tags and add them to post
+                List<int> tagIds = _tagService.AddTags(newPost.TagList);
+                _tagService.AddTagsToPost(addedPost.Entity.Id, tagIds);
+
+                //Return the post
+                serviceResponse.BlogPost = Helpers.Mapper.MapPostToDTO(post);
+                serviceResponse.Message = Resource.PostCreated;
+                return serviceResponse;
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Exception = ex;
+                serviceResponse.Success = false;
+                serviceResponse.Message = Resource.PostNotCreated;
+                return serviceResponse;
+            }
         }
 
         public async Task<ServiceResponse<List<GetPostDto>>> GetAllPosts()

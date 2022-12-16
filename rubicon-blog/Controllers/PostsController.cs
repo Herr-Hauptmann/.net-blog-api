@@ -36,7 +36,7 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<GetPostDto>>> AddPost(CreatePostRequest newPost){
+        public async Task<ActionResult<SinglePostServiceResponse<GetPostDto>>> AddPost(CreatePostRequest newPost){
             if (newPost == null || newPost.BlogPost == null)
                 return BadRequest();
             return Ok(await _postService.AddPost(newPost.BlogPost));
