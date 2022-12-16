@@ -61,15 +61,6 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This post doesn&apos;t exist.
-        /// </summary>
-        public static string NoPost {
-            get {
-                return ResourceManager.GetString("NoPost", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Post created sucessfully.
         /// </summary>
         public static string PostCreated {
@@ -97,6 +88,15 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Post was not found or post with new title already exists.
+        /// </summary>
+        public static string PostNotUpdated {
+            get {
+                return ResourceManager.GetString("PostNotUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Posts have been sucessfully fetched.
         /// </summary>
         public static string PostsFetched {
@@ -111,6 +111,15 @@ namespace rubicon_blog.Resources {
         public static string PostsNotFetched {
             get {
                 return ResourceManager.GetString("PostsNotFetched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post has successfully been updated.
+        /// </summary>
+        public static string PostUpdated {
+            get {
+                return ResourceManager.GetString("PostUpdated", resourceCulture);
             }
         }
     }

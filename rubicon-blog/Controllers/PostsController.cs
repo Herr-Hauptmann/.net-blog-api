@@ -33,7 +33,12 @@ namespace rubicon_blog.Controllers
         [HttpGet("{slug}")]
         public async Task<ActionResult<SinglePostServiceResponse<GetPostDto>>> GetSingle(string slug)
         {
-            return Ok(await _postService.GetPostBySlug(slug));
+            var response = await _postService.GetPostBySlug(slug);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response);
         }
 
         [HttpPost]
@@ -43,9 +48,11 @@ namespace rubicon_blog.Controllers
             return Ok(await _postService.AddPost(newPost.BlogPost));
         }
         [HttpPut("{slug}")]
-        public async Task<ActionResult<ServiceResponse<GetPostDto>>> UpdatePost (string slug, UpdatePostDto updatedPost){
-            var response = await _postService.UpdatePost(slug, updatedPost);
-            if (response.Data == null){
+        public async Task<ActionResult<SinglePostServiceResponse<GetPostDto>>> UpdatePost (string slug, UpdatePostRequest updatedPost){
+            if (updatedPost == null || updatedPost.BlogPost == null)
+                return BadRequest();
+            var response = await _postService.UpdatePost(slug, updatedPost.BlogPost);
+            if (response.Success == false){
                 return NotFound(response);
             }
             return Ok(response);

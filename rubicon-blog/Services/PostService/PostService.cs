@@ -89,7 +89,7 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
             try
             {
-                Post? post = _context.Posts.Include(t => t.Tags).SingleOrDefault(post => post.Slug.Equals(slug));
+                Post? post = await _context.Posts.Include(t => t.Tags).SingleOrDefaultAsync(post => post.Slug.Equals(slug));
                 if (post == null)
                     throw new Exception("Not found");
                 serviceResponse.BlogPost = Helpers.Mapper.MapPostToGetDto(post);
@@ -104,29 +104,24 @@ namespace rubicon_blog.Services.PostService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost)
+        public async Task<SinglePostServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost)
         {
-            var serviceResponse = new ServiceResponse<GetPostDto>();
+            var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
             try
             { 
-                Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
-                post.UpdatedAt=DateTime.Now;
-                post.Slug = _slugHelper.GenerateSlug(updatedPost.Title);
-                Post updatedEntity = new();
-                _mapper.Map(post, updatedEntity);
-                updatedEntity.SetNullProperties(oldObj: post);
-                _mapper.Map(updatedEntity, post);
-                //if(updatedPost.Body == null) updatedPost.Body = post.Body; 
-                //if(updatedPost.Description == null) updatedPost.Description = post.Description; 
-                //if(updatedPost.Title == null) updatedPost.Title = post.Title; 
-                //_mapper.Map(updatedPost, post);
+                Post post = await _context.Posts.Include(p => p.Tags).SingleAsync(post => post.Slug.Equals(slug));
+                Helpers.Mapper.MapUpdatePost(post, updatedPost);
+                post.Slug = _slugHelper.GenerateSlug(post.Title);
+                post.UpdatedAt = DateTime.Now;
                 _context.SaveChanges();
-                serviceResponse.Data = _mapper.Map<GetPostDto>(post);
+                serviceResponse.BlogPost = Helpers.Mapper.MapPostToGetDto(post);
+                serviceResponse.Message = Resource.PostUpdated;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                serviceResponse.Exception = ex;
                 serviceResponse.Success = false;
-                serviceResponse.Message = Resource.NoPost;
+                serviceResponse.Message = Resource.PostNotUpdated;
             }
             return serviceResponse;
         }

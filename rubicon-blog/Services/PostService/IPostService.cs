@@ -11,7 +11,7 @@ namespace rubicon_blog.Services.PostService
         Task<MultiplePostServiceResponse<List<GetPostDto>>> GetAllPosts(string tagName);
         Task<SinglePostServiceResponse<GetPostDto>> GetPostBySlug(string slug);
         Task<SinglePostServiceResponse<GetPostDto>> AddPost(AddPostDto newPost);
-        Task<ServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost);
+        Task<SinglePostServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost);
         Task<ServiceResponse<List <GetPostDto>>> DeletePost(string slug);
     }
 }

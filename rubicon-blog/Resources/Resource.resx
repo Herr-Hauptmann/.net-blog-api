@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="NoPost" xml:space="preserve">
-    <value>This post doesn't exist</value>
-    <comment>When post is not found in db</comment>
-  </data>
   <data name="PostCreated" xml:space="preserve">
     <value>Post created sucessfully</value>
   </data>
@@ -130,10 +126,16 @@
   <data name="PostNotFound" xml:space="preserve">
     <value>Required post doesn't exist</value>
   </data>
+  <data name="PostNotUpdated" xml:space="preserve">
+    <value>Post was not found or post with new title already exists</value>
+  </data>
   <data name="PostsFetched" xml:space="preserve">
     <value>Posts have been sucessfully fetched</value>
   </data>
   <data name="PostsNotFetched" xml:space="preserve">
     <value>Posts couldn't be fetched</value>
+  </data>
+  <data name="PostUpdated" xml:space="preserve">
+    <value>Post has successfully been updated</value>
   </data>
 </root>

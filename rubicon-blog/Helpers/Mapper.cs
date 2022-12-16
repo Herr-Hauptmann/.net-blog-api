@@ -29,5 +29,15 @@ namespace rubicon_blog.Helpers
                 UpdatedAt = DateTime.Now
             };
         }
+
+        public static void MapUpdatePost(Post post, UpdatePostDto updatedPost)
+        {
+            if (updatedPost.Body != null)
+                post.Body = updatedPost.Body;
+            if (updatedPost.Description !=null)
+                post.Description = updatedPost.Description;
+            if (updatedPost.Title != null)
+                post.Title = updatedPost.Title;
+        }
     }
 }
