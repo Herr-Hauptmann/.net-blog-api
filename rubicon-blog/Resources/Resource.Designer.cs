@@ -70,11 +70,56 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The comment was sucessfully deleted.
+        /// </summary>
+        public static string CommentDeleted {
+            get {
+                return ResourceManager.GetString("CommentDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There was a problem creating your comment.
         /// </summary>
         public static string CommentNotCreated {
             get {
                 return ResourceManager.GetString("CommentNotCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was a problem deleting the comment.
+        /// </summary>
+        public static string CommentNotDeleted {
+            get {
+                return ResourceManager.GetString("CommentNotDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This comment doesn&apos;t exist.
+        /// </summary>
+        public static string CommentNotFound {
+            get {
+                return ResourceManager.GetString("CommentNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comments have been successfully fetched.
+        /// </summary>
+        public static string CommentsFetched {
+            get {
+                return ResourceManager.GetString("CommentsFetched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error fetching comments.
+        /// </summary>
+        public static string CommentsNotFetched {
+            get {
+                return ResourceManager.GetString("CommentsNotFetched", resourceCulture);
             }
         }
         

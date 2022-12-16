@@ -120,8 +120,23 @@
   <data name="CommentCreated" xml:space="preserve">
     <value>The comment was successfully created</value>
   </data>
+  <data name="CommentDeleted" xml:space="preserve">
+    <value>The comment was sucessfully deleted</value>
+  </data>
   <data name="CommentNotCreated" xml:space="preserve">
     <value>There was a problem creating your comment</value>
+  </data>
+  <data name="CommentNotDeleted" xml:space="preserve">
+    <value>There was a problem deleting the comment</value>
+  </data>
+  <data name="CommentNotFound" xml:space="preserve">
+    <value>This comment doesn't exist</value>
+  </data>
+  <data name="CommentsFetched" xml:space="preserve">
+    <value>Comments have been successfully fetched</value>
+  </data>
+  <data name="CommentsNotFetched" xml:space="preserve">
+    <value>There was an error fetching comments</value>
   </data>
   <data name="PostCreated" xml:space="preserve">
     <value>Post created sucessfully</value>

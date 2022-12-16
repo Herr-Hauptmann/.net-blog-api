@@ -8,7 +8,6 @@ namespace rubicon_blog.Models
     public class MultipleCommentServiceResponse<T>
     {
         public T? Comments{get; set;}
-        public int ? PostsCount{get; set;}
 
         public bool Success{get;set;} = true;
 

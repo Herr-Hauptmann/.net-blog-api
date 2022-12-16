@@ -72,12 +72,14 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpGet("{slug}/comments")]
-        public async Task<ActionResult<ServiceResponse<List<GetCommentDto>>>> GetAllComments(string slug){
-            return Ok(await _commentService.GetAllComments(slug));
+        public async Task<ActionResult<MultipleCommentServiceResponse<List<GetCommentDto>>>> GetAllComments(string slug){
+            var res = await _commentService.GetAllComments(slug);
+            return (res.Success) ? Ok(res) : BadRequest(res);
         }
         [HttpDelete("{slug}/comments/{id}")]
         public async Task<ActionResult<ServiceResponse<string>>> DeleteComment(string slug, int id){
-            return Ok(await _commentService.DeleteComment(slug, id));
+            var res = await _commentService.DeleteComment(slug, id);
+            return (res.Success) ? Ok(res) : BadRequest(res);
         }
     }
 }

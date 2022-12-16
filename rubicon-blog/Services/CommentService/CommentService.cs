@@ -43,23 +43,47 @@ namespace rubicon_blog.Services.CommentService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<String>> DeleteComment(string slug, int id)
+        public async Task<ServiceResponse<string>> DeleteComment(string slug, int id)
         {
-            Comment comment = await _context.Comments.SingleAsync(c => c.Id == id);
-            _context.Comments.Remove(comment);
-            return new ServiceResponse<string>{Data = "Sucessfully deleted comment with id:"+id};
+            var serviceResponse = new ServiceResponse<string>();
+            try
+            {
+                Comment? comment = await _context.Comments.SingleOrDefaultAsync(c => c.Id == id);
+                if (comment == null)
+                {
+                    serviceResponse.Message = Resource.CommentNotFound;
+                    serviceResponse.Success = false;
+                    return serviceResponse;
+                }
+                _context.Comments.Remove(comment);
+                _context.SaveChanges();
+                serviceResponse.Message = Resource.CommentDeleted;
+
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Exception = ex;
+                serviceResponse.Message = Resource.CommentNotDeleted;
+            }
+            return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetCommentDto>>> GetAllComments(string slug)
+        public async Task<MultipleCommentServiceResponse<List<GetCommentDto>>> GetAllComments(string slug)
         {
+            var serviceResponse = new MultipleCommentServiceResponse<List<GetCommentDto>>();
             try{
-                int postId = (await _context.Posts.SingleAsync(post => post.Slug.Equals(slug))).Id;
-                List<Comment> comments = await _context.Comments.ToListAsync();
-                return new ServiceResponse<List<GetCommentDto>>{Data = comments.Select(comment => _mapper.Map<GetCommentDto>(comment)).ToList()};
-            }catch (Exception)
-            {
-                return new ServiceResponse<List<GetCommentDto>>{Success = false, Message = "Greska!"};
+                var post = await _context.Posts.Include(p => p.Comments).SingleAsync(post => post.Slug.Equals(slug));
+                serviceResponse.Comments = post.Comments.Select(comment => _mapper.Map<GetCommentDto>(comment)).ToList();
+                serviceResponse.Message = Resource.CommentsFetched;
             }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Exception = ex;
+                serviceResponse.Message = Resource.CommentsNotFetched;
+            }
+            return serviceResponse;
         }
     }
 }
