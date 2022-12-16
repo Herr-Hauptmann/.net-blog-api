@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using rubicon_blog.Dtos.Tag;
+using rubicon_blog.Resources;
 
 namespace rubicon_blog.Services.TagService
 {
@@ -55,7 +57,7 @@ namespace rubicon_blog.Services.TagService
             _context.SaveChanges();
         }
 
-        public void deleteTags(List<Tag> tags)
+        public void DeleteTags(List<Tag> tags)
         {
             foreach(Tag tag in tags)
             {
@@ -64,6 +66,24 @@ namespace rubicon_blog.Services.TagService
                     _context.Remove(tag);
             }
             _context.SaveChanges();
+        }
+
+        public async Task<MultipleTagServiceResponse<List<string>>> GetAllTags()
+        {
+            var serviceResponse = new MultipleTagServiceResponse<List<string>>();
+            try
+            {
+                var tags = await _context.Tags.ToListAsync();
+                serviceResponse.Tags = tags.Select(tag => tag.Name).ToList();
+                serviceResponse.Message = Resource.TagsFetched;
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Exception = ex;
+                serviceResponse.Success = false;
+                serviceResponse.Message = Resource.TagsNotFetched;
+            }
+            return serviceResponse;
         }
 
         public List<Post> GetPostsByTag(string tagName)

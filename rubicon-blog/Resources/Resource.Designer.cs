@@ -131,5 +131,23 @@ namespace rubicon_blog.Resources {
                 return ResourceManager.GetString("PostUpdated", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tags have been sucessfully fetched.
+        /// </summary>
+        public static string TagsFetched {
+            get {
+                return ResourceManager.GetString("TagsFetched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error fetching tags.
+        /// </summary>
+        public static string TagsNotFetched {
+            get {
+                return ResourceManager.GetString("TagsNotFetched", resourceCulture);
+            }
+        }
     }
 }

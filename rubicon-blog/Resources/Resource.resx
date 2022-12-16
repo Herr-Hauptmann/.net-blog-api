@@ -141,4 +141,10 @@
   <data name="PostUpdated" xml:space="preserve">
     <value>Post has successfully been updated</value>
   </data>
+  <data name="TagsFetched" xml:space="preserve">
+    <value>Tags have been sucessfully fetched</value>
+  </data>
+  <data name="TagsNotFetched" xml:space="preserve">
+    <value>There was an error fetching tags</value>
+  </data>
 </root>

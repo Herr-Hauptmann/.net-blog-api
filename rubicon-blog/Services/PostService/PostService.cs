@@ -131,7 +131,7 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new ServiceResponse<String>();
             try{
                 Post post = await _context.Posts.Include(p => p.Tags).SingleAsync(post => post.Slug.Equals(slug));
-                _tagService.deleteTags(post.Tags);
+                _tagService.DeleteTags(post.Tags);
                 _context.Posts.Remove(post);
                 _context.SaveChanges();
                 serviceResponse.Message = Resource.PostDeleted;

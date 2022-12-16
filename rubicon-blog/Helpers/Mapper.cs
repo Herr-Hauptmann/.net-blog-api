@@ -1,4 +1,5 @@
 ﻿using rubicon_blog.Dtos.Post;
+using rubicon_blog.Dtos.Tag;
 
 namespace rubicon_blog.Helpers
 {
@@ -38,6 +39,14 @@ namespace rubicon_blog.Helpers
                 post.Description = updatedPost.Description;
             if (updatedPost.Title != null)
                 post.Title = updatedPost.Title;
+        }
+
+        public static GetTagDto TagToGetDto(Tag t)
+        {
+            return new GetTagDto
+            {
+                Name = t.Name
+            };
         }
     }
 }
