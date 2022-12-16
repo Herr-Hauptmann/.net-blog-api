@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace rubicon_blog.Services.TagService
 {
@@ -52,6 +53,31 @@ namespace rubicon_blog.Services.TagService
                 }
             }
             _context.SaveChanges();
+        }
+
+        public List<Post> GetPostsByTag(string tagName)
+        {
+            List<Post> posts = new List<Post>();
+            try
+            {
+                var tag = _context.Tags.Where(tag => tag.Name.Equals(tagName)).Include(p => p.Posts).ToList();
+                if (tag != null && tag[0] != null)
+                {
+                    foreach (Post p in tag[0].Posts)
+                    {
+                        var post = _context.Posts.Where(post => post.Id == p.Id).Include(t => t.Tags).ToList();
+                        foreach(var t in post)
+                        {
+                            posts.Add(t);
+                        }
+
+                    }
+                }
+                return posts;
+            }catch(Exception )
+            {
+                return posts;
+            }
         }
     }
 }

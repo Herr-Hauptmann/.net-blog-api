@@ -56,13 +56,17 @@ namespace rubicon_blog.Services.PostService
             }
         }
 
-        public async Task<MultiplePostServiceResponse<List<GetPostDto>>> GetAllPosts()
+        public async Task<MultiplePostServiceResponse<List<GetPostDto>>> GetAllPosts(string tagName)
         {
             var serviceResponse = new MultiplePostServiceResponse<List<GetPostDto>>();
             try
             {
-                List<Post> posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
-
+                List<Post> posts;
+                if (tagName != null && tagName.Length != 0)
+                    posts = _tagService.GetPostsByTag(tagName);
+                else
+                    posts = await _context.Posts.Include(t => t.Tags).ToListAsync();
+                    
                 //Fill the response
                 serviceResponse.BlogPosts = new List<GetPostDto>();
                 foreach (var post in posts)
