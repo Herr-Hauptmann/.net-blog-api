@@ -1,27 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using Slugify;
 using rubicon_blog.Dtos.Post;
 using Microsoft.EntityFrameworkCore;
 using rubicon_blog.Services.TagService;
 using rubicon_blog.Resources;
-using rubicon_blog.Helpers;
 
 namespace rubicon_blog.Services.PostService
-{    
+{
     public class PostService : IPostService
     {
-        private IMapper _mapper;
-        private SlugHelper _slugHelper;
-        private DataContext _context;
-        private ITagService _tagService;
+        private readonly SlugHelper _slugHelper;
+        private readonly DataContext _context;
+        private readonly ITagService _tagService;
 
-        public PostService(ITagService tagService, IMapper mapper, DataContext context)
+        public PostService(ITagService tagService, DataContext context)
         {
-            _mapper = mapper;
             _slugHelper = new SlugHelper();
             _context = context;
             _tagService = tagService;
