@@ -55,6 +55,17 @@ namespace rubicon_blog.Services.TagService
             _context.SaveChanges();
         }
 
+        public void deleteTags(List<Tag> tags)
+        {
+            foreach(Tag tag in tags)
+            {
+                int postsNumber = _context.Tags.Include(t => t.Posts).Single(t => t.Id == tag.Id).Posts.Count;
+                if (postsNumber <= 1)
+                    _context.Remove(tag);
+            }
+            _context.SaveChanges();
+        }
+
         public List<Post> GetPostsByTag(string tagName)
         {
             List<Post> posts = new List<Post>();

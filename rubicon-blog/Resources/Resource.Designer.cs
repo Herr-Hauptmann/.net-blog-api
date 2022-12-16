@@ -70,6 +70,15 @@ namespace rubicon_blog.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Post sucessfully deleted.
+        /// </summary>
+        public static string PostDeleted {
+            get {
+                return ResourceManager.GetString("PostDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There was an error while creating the post.
         /// </summary>
         public static string PostNotCreated {

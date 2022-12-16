@@ -58,9 +58,9 @@ namespace rubicon_blog.Controllers
             return Ok(response);
         }
         [HttpDelete("{slug}")]
-        public async Task<ActionResult<ServiceResponse<List<GetPostDto>>>> Delete (string slug){
+        public async Task<ActionResult<ServiceResponse<string>>> Delete (string slug){
             var response = await _postService.DeletePost(slug);
-            if (response.Data == null){
+            if (response.Success == false){
                 return NotFound(response);
             }
             return Ok(response);

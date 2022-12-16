@@ -10,5 +10,6 @@ namespace rubicon_blog.Services.TagService
         public List<int> AddTags(List<string>? tagNames);
         void AddTagsToPost(int postId, List<int> tagIds);
         public List<Post> GetPostsByTag(string tagName);
+        public void deleteTags(List<Tag> tags);
     }
 }

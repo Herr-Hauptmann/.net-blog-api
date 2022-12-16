@@ -126,18 +126,20 @@ namespace rubicon_blog.Services.PostService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetPostDto>>> DeletePost(string slug)
+        public async Task<ServiceResponse<String>> DeletePost(string slug)
         {
-            var serviceResponse = new ServiceResponse<List<GetPostDto>>();
+            var serviceResponse = new ServiceResponse<String>();
             try{
-                Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
+                Post post = await _context.Posts.Include(p => p.Tags).SingleAsync(post => post.Slug.Equals(slug));
+                _tagService.deleteTags(post.Tags);
                 _context.Posts.Remove(post);
                 _context.SaveChanges();
-                serviceResponse.Message = "Post deleted successfully";
-            }catch(Exception)
+                serviceResponse.Message = Resource.PostDeleted;
+            }catch(Exception ex)
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "This post doesn't exist";
+                serviceResponse.Message = Resource.PostNotFound;
+                serviceResponse.Exception = ex;
             }
             return serviceResponse;
         }

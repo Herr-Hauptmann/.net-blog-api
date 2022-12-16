@@ -120,6 +120,9 @@
   <data name="PostCreated" xml:space="preserve">
     <value>Post created sucessfully</value>
   </data>
+  <data name="PostDeleted" xml:space="preserve">
+    <value>Post sucessfully deleted</value>
+  </data>
   <data name="PostNotCreated" xml:space="preserve">
     <value>There was an error while creating the post</value>
   </data>
