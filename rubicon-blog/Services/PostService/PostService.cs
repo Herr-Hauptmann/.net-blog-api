@@ -7,6 +7,8 @@ using Slugify;
 using rubicon_blog.Dtos.Post;
 using Microsoft.EntityFrameworkCore;
 using rubicon_blog.Services.TagService;
+using rubicon_blog.Resources;
+using rubicon_blog.Helpers;
 
 namespace rubicon_blog.Services.PostService
 {    
@@ -82,17 +84,21 @@ namespace rubicon_blog.Services.PostService
                 Post post = await _context.Posts.SingleAsync(post => post.Slug.Equals(slug));
                 post.UpdatedAt=DateTime.Now;
                 post.Slug = _slugHelper.GenerateSlug(updatedPost.Title);
-                if(updatedPost.Body == null) updatedPost.Body = post.Body; 
-                if(updatedPost.Description == null) updatedPost.Description = post.Description; 
-                if(updatedPost.Title == null) updatedPost.Title = post.Title; 
-                _mapper.Map(updatedPost, post);
+                Post updatedEntity = new();
+                _mapper.Map(post, updatedEntity);
+                updatedEntity.SetNullProperties(oldObj: post);
+                _mapper.Map(updatedEntity, post);
+                //if(updatedPost.Body == null) updatedPost.Body = post.Body; 
+                //if(updatedPost.Description == null) updatedPost.Description = post.Description; 
+                //if(updatedPost.Title == null) updatedPost.Title = post.Title; 
+                //_mapper.Map(updatedPost, post);
                 _context.SaveChanges();
                 serviceResponse.Data = _mapper.Map<GetPostDto>(post);
             }
             catch(Exception)
             {
                 serviceResponse.Success = false;
-                serviceResponse.Message = "This post doesn't exist";
+                serviceResponse.Message = Resource.NoPost;
             }
             return serviceResponse;
         }

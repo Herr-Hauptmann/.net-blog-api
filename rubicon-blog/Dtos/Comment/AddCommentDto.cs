@@ -7,6 +7,6 @@ namespace rubicon_blog.Dtos.Comment
 {
     public class AddCommentDto
     {
-        public string Body { get; set; } = "";
+        public string Body { get; set; } = null!;
     }
 }

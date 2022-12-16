@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using rubicon_blog.Dtos.Comment;
 using rubicon_blog.Dtos.Post;
+using rubicon_blog.Helpers;
 using rubicon_blog.Services.CommentService;
 using rubicon_blog.Services.PostService;
+using rubicon_blog.Wrappers;
 
 namespace rubicon_blog.Controllers
 {
@@ -34,8 +36,10 @@ namespace rubicon_blog.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<GetPostDto>>> AddPost(AddPostDto newPost){
-            return Ok(await _postService.AddPost(newPost));
+        public async Task<ActionResult<ServiceResponse<GetPostDto>>> AddPost(CreatePostRequest newPost){
+            if (newPost == null || newPost.BlogPost == null)
+                return BadRequest();
+            return Ok(await _postService.AddPost(newPost.BlogPost));
         }
         [HttpPut("{slug}")]
         public async Task<ActionResult<ServiceResponse<GetPostDto>>> UpdatePost (string slug, UpdatePostDto updatedPost){

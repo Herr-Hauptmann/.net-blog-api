@@ -12,5 +12,7 @@ namespace rubicon_blog.Models
         public bool Success{get;set;} = true;
 
         public string Message{get;set;} = string.Empty;
+
+        public Exception? Exception = null;
     }
 }
