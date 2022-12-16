@@ -70,7 +70,7 @@ namespace rubicon_blog.Services.TagService
                         posts.Add(post);
                     }
                 }
-                posts = posts.OrderByDescending(p => p.Id).ToList();
+                posts = posts.OrderByDescending(p => p.CreatedAt).ToList();
                 return posts;
             }catch(Exception )
             {

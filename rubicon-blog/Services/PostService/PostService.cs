@@ -65,7 +65,7 @@ namespace rubicon_blog.Services.PostService
                 if (tagName != null && tagName.Length != 0)
                     posts = _tagService.GetPostsByTag(tagName);
                 else
-                    posts = await _context.Posts.Include(t => t.Tags).OrderByDescending(p=>p.Id).ToListAsync();
+                    posts = await _context.Posts.Include(t => t.Tags).OrderByDescending(p=>p.CreatedAt).ToListAsync();
 
                 //Fill the response
                 serviceResponse.BlogPosts = new List<GetPostDto>();
