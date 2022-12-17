@@ -21,7 +21,12 @@ namespace rubicon_blog.Controllers
         [HttpGet]
         public async Task<ActionResult<MultiplePostServiceResponse<List<GetPostDto>>>> Get()
         {
-            string tag = HttpContext.Request.Query["tag"].ToString();
+            var http = HttpContext;
+            string tag;
+            if (http == null)
+                tag = "";
+            else
+                tag = HttpContext.Request.Query["tag"].ToString();
             return Ok(await _postService.GetAllPosts(tag));
         }
 

@@ -12,7 +12,7 @@ namespace rubicon_blog.Dtos.Post
         public string Description { get; set; } = "";
         public string Body { get; set; } = "";
         public List<string> tagList {get;set;} = new List<string>();
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

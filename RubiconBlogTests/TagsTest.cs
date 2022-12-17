@@ -1,15 +1,12 @@
 using Moq;
 using FluentAssertions;
 using rubicon_blog.Controllers;
-using rubicon_blog.Dtos.Post;
-using rubicon_blog.Services.CommentService;
-using rubicon_blog.Services.PostService;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using rubicon_blog.Services.TagService;
+using rubicon_blog.Models;
 
 namespace RubiconBlogTests
 {
@@ -20,7 +17,7 @@ namespace RubiconBlogTests
         public async Task GetAllTagsReturnsStatus200()
         {
             var mockTagService = new Moq.Mock<ITagService>();
-            mockTagService.Setup(service => service.GetAllTags()).ReturnsAsync(new rubicon_blog.Models.MultipleTagServiceResponse<List<string>>());
+            mockTagService.Setup(service => service.GetAllTags()).ReturnsAsync(new MultipleTagServiceResponse<List<string>>());
 
             var sut = new TagsController(mockTagService.Object);
 

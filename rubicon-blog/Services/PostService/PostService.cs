@@ -8,12 +8,10 @@ namespace rubicon_blog.Services.PostService
 {
     public class PostService : IPostService
     {
-        private readonly SlugHelper _slugHelper;
         private readonly DataContext _context;
 
         public PostService(DataContext context)
         {
-            _slugHelper = new SlugHelper();
             _context = context;
         }
 
@@ -22,6 +20,7 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
             try
             {
+                SlugHelper _slugHelper = new SlugHelper();
                 //Create post
                 Post post = Helpers.Mapper.MapAddDtoToPost(newPost);
                 post.Slug = _slugHelper.GenerateSlug(newPost.Title);
@@ -96,6 +95,7 @@ namespace rubicon_blog.Services.PostService
 
         public async Task<SinglePostServiceResponse<GetPostDto>> UpdatePost(string slug, UpdatePostDto updatedPost)
         {
+            SlugHelper _slugHelper = new SlugHelper();
             var serviceResponse = new SinglePostServiceResponse<GetPostDto>();
             try
             { 
