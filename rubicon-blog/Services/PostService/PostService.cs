@@ -10,13 +10,11 @@ namespace rubicon_blog.Services.PostService
     {
         private readonly SlugHelper _slugHelper;
         private readonly DataContext _context;
-        private readonly ITagService _tagService;
 
-        public PostService(ITagService tagService, DataContext context)
+        public PostService(DataContext context)
         {
             _slugHelper = new SlugHelper();
             _context = context;
-            _tagService = tagService;
         }
 
         public async Task<SinglePostServiceResponse<GetPostDto>> AddPost(AddPostDto newPost)
@@ -31,8 +29,8 @@ namespace rubicon_blog.Services.PostService
                 _context.SaveChanges();
 
                 //Create tags and add them to post
-                List<int> tagIds = _tagService.AddTags(newPost.TagList);
-                _tagService.AddTagsToPost(addedPost.Entity.Id, tagIds);
+                List<int> tagIds = AddTags(newPost.TagList);
+                AddTagsToPost(addedPost.Entity.Id, tagIds);
 
                 //Return the post
                 serviceResponse.BlogPost = Helpers.Mapper.MapPostToGetDto(post);
@@ -55,7 +53,7 @@ namespace rubicon_blog.Services.PostService
             {
                 List<Post> posts;
                 if (tagName != null && tagName.Length != 0)
-                    posts = _tagService.GetPostsByTag(tagName);
+                    posts = GetPostsByTag(tagName);
                 else
                     posts = await _context.Posts.Include(t => t.Tags).OrderByDescending(p=>p.CreatedAt).ToListAsync();
 
@@ -123,7 +121,7 @@ namespace rubicon_blog.Services.PostService
             var serviceResponse = new ServiceResponse<String>();
             try{
                 Post post = await _context.Posts.Include(p => p.Tags).SingleAsync(post => post.Slug.Equals(slug));
-                _tagService.DeleteTags(post.Tags);
+                DeleteTags(post.Tags);
                 _context.Posts.Remove(post);
                 _context.SaveChanges();
                 serviceResponse.Message = Resource.PostDeleted;
@@ -134,6 +132,79 @@ namespace rubicon_blog.Services.PostService
                 serviceResponse.Exception = ex;
             }
             return serviceResponse;
+        }
+
+        private List<Post> GetPostsByTag(string tagName)
+        {
+            List<Post> posts = new List<Post>();
+            try
+            {
+                //very crude but it only returns one tag
+                var tag = _context.Tags.Include(p => p.Posts).SingleOrDefault(tag => tag.Name.Equals(tagName));
+                if (tag != null)
+                {
+                    foreach (Post p in tag.Posts)
+                    {
+                        var post = _context.Posts.Include(t => t.Tags).Single(post => post.Id == p.Id);
+                        posts.Add(post);
+                    }
+                }
+                posts = posts.OrderByDescending(p => p.CreatedAt).ToList();
+                return posts;
+            }
+            catch (Exception)
+            {
+                return posts;
+            }
+        }
+        public List<int> AddTags(List<string>? tagNames)
+        {
+            List<int> tagIds = new();
+            if (tagNames == null)
+                return tagIds;
+
+            foreach (string tagName in tagNames)
+            {
+                var t = _context.Tags.SingleOrDefault(t => t.Name.Equals(tagName));
+                if (t == null)
+                {
+                    _context.Tags.Add(new Tag { Name = tagName });
+                    _context.SaveChanges();
+                    t = _context.Tags.SingleOrDefault(t => t.Name.Equals(tagName));
+                }
+                if (t != null)
+                    tagIds.Add(t.Id);
+            }
+
+            return tagIds;
+        }
+
+        public void AddTagsToPost(int postId, List<int> tagIds)
+        {
+            var post = _context.Posts.Find(postId);
+            if (post == null)
+                throw new Exception("Post ne postoji!");
+
+            foreach (int id in tagIds)
+            {
+                var tag = _context.Tags.FirstOrDefault(t => t.Id == id);
+                if (tag != null)
+                {
+                    post.Tags.Add(tag);
+                }
+            }
+            _context.SaveChanges();
+        }
+
+        public void DeleteTags(List<Tag> tags)
+        {
+            foreach (Tag tag in tags)
+            {
+                int postsNumber = _context.Tags.Include(t => t.Posts).Single(t => t.Id == tag.Id).Posts.Count;
+                if (postsNumber <= 1)
+                    _context.Remove(tag);
+            }
+            _context.SaveChanges();
         }
     }
 }
