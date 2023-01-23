@@ -1,5 +1,5 @@
-# Rubicon blog API
-A simple API made as a task for Rubicon made with .NET 6
+# Blog API
+A simple API made with .NET 6
 
 ## Prerequisites
 Programs you will need in order to run this solution include:
@@ -9,7 +9,7 @@ Programs you will need in order to run this solution include:
 - Git
 ## Install instructions
 1. Clone the repository via git
-2. Open the solution file (Rubicon Blog.sln)
+2. Open the solution file (Blog.sln)
 3. Check if all NuGet packages are installed for both projects (Right click on the project -> Manage NuGet packeges...) and check if all of the packages from the [list](##packages). are there, if not, install them
 4. Open terminal in Visual Studio (CTRL + ` or search for Terminal)
 5. Install .NET EF globally with ```dotnet tool install --global dotnet-ef```
@@ -20,14 +20,14 @@ Programs you will need in order to run this solution include:
 NOTE: Database seeding is done automatically when there are no posts in your database
 
 ## Packages
-### Rubicon-blog
+### Blog
 - Microsoft.EntityFrameworkCore
 - Microsoft.EntityFrameworkCore.Design
 - Microsoft.EntityFrameworkCore.SqlServer
 - Slugify.Core
 - Swashbuckle.AspNetCore
 
-### RubiconBlogTests
+### BlogTests
 - FluentAssertions
 - Microsoft.NET.Test.Sdk
 - Moq
