@@ -13,7 +13,7 @@ Programs you will need in order to run this solution include:
 3. Check if all NuGet packages are installed for both projects (Right click on the project -> Manage NuGet packeges...) and check if all of the packages from the [list](##packages). are there, if not, install them
 4. Open terminal in Visual Studio (CTRL + ` or search for Terminal)
 5. Install .NET EF globally with ```dotnet tool install --global dotnet-ef```
-6. Change directory to rubicon-blog project ```cd ./rubicon-blog```
+6. Change directory to blog project ```cd ./blog```
 7. Migrate the database with ```dotnet ef database update```
 8. Run the project
 
